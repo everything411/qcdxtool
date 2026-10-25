@@ -73,11 +73,12 @@ The driver has two classes of setters and the tool enforces the distinction:
 
 | gate | applies to | unlock |
 |---|---|---|
-| persistence | `sharpness warmness hue saturation intensity contrast pcc 3dlut` - their setters call `FUN_140138458`, which writes the config to disk | `--persist-ok` |
+| persistence | `sharpness warmness hue saturation intensity contrast pcc 3dlut` - their setters call `FUN_140138458`, which *attempts* to store the config through the miniport settings API | `--persist-ok` |
 | non-plugable slot | a slot whose `displaycaps:plugable` is 0 (observed: `1`, `2`, `3`, `7`) - slot 1 is the internal eDP panel, the others look like unused slots | `--allow-internal` |
 
-**A persisting write survives a reboot.** If you write one, write the neutral
-value back immediately:
+**The setter ignores the result of that store attempt**, so `status:0` proves
+the value was applied, not that it was saved. Treat a persisting write as if it
+survives a reboot anyway, and write the neutral value back immediately:
 
 | key | range | neutral |
 |---|---|---|
@@ -126,5 +127,6 @@ python tools\audit.py
   resolve the one `HKLM\SYSTEM\CurrentControlSet\Services\QCDX` loads.
 * The escape result is **not** the NTSTATUS. Each command writes its own status
   into the private data block; see the spec for the offsets.
+
 
 

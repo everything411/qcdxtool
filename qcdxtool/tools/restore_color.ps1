@@ -5,9 +5,11 @@
   WHY THIS EXISTS
   ---------------
   The color setters (sharpness / warmness / hue / saturation / intensity /
-  contrast / pcc / 3dlut) call FUN_140138458() on success, which writes the
-  configuration to disk. A wrong value therefore SURVIVES A REBOOT and can
-  leave the panel tinted.
+  contrast / pcc / 3dlut) call FUN_140138458() on success, which asks the
+  miniport settings API to store the configuration. The setter ignores the
+  result, and no stored colour blob has been observed in that registry key, so
+  the real persistence behaviour is unverified - but a wrong value can leave
+  the panel tinted, so resetting is the safe move.
 
   Neutral values (from the clamp ranges in the setters):
       hue                    -180 .. +180,  neutral 0
@@ -79,4 +81,5 @@ if ($ran -eq 0) {
     Write-Host "$failed key(s) did not return status 0 - inspect the output above." -ForegroundColor Yellow
 }
 exit $(if ($failed -eq 0) { 0 } else { 1 })
+
 

@@ -237,7 +237,18 @@ Each returns **1 or 0 - a capability flag, not the current value.**
 | `AuxWrite` | `FUN_1401128E0` | no |
 
 "Persists" means the handler calls `FUN_140138458(displayId, 10, cfg, 0x14)`,
-which writes the configuration to disk. **A wrong value survives reboot.**
+which asks the miniport settings API to store the configuration at
+`Miniport\DISPLAY\Config`. Two caveats, both verified:
+
+* the setter **ignores the return value** of that call, so `status:0` only proves
+  the value was applied, not stored;
+* on the test machine that registry key
+  (`HKLM\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-...}\0000\Miniport\DISPLAY\Config`)
+  contains a single value, `LTMC` (a path to `LTMConfig.xml`) - no per-display
+  colour blob was found.
+
+Treat a wrong value as potentially surviving a reboot, but do not assume the
+store is working either - it has not been observed to hold colour data.
 
 Value ranges (from the `FUN_140115C10(value, min, max)` clamps):
 
@@ -346,5 +357,6 @@ DriverStore can hold several copies; always resolve the one that
 `tools/audit.py` re-derives the three command tables, the five key strings and
 the persistence classification straight from the binary and compares them with
 this document; it should report "all checks passed".
+
 
 
