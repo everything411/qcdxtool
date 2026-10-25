@@ -1,0 +1,5 @@
+# normalise text, keep binaries verbatim
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bin binary
+*.exe binary

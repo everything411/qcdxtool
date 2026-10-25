@@ -1,0 +1,657 @@
+[Qualcomm Display Diagnostic Log Buffer]
+Version: v1.0
+Kernel Mode Driver Created On: Jul 25 2026 22:49:23
+
+
+[Display #1 - Primary]
+
+Connection: eDP
+Display Type: Internal
+
+Mode Set: Yes (Index:1)
+Resolution: 2944x1840
+Refresh rate: 89Hz
+AVR Support: No
+Dynamic Refresh Rates: (0 rates)
+
+Display State: On
+VSync Interrupt: Enabled
+Power Savings Max Level: 0
+Power Savings Current Level: 0
+Core Clock Vote: 271MHz
+Bandwidth Vote (AB): 3194MB/s
+Bandwidth Vote (IB): 800MB/s
+
+Max Luminance: 993486 millinits
+Min Luminance: 0 millinits
+Blend Space: HDR10
+Display Color Blend Space : HDR10
+Bits Per Pixel: 30
+
+[Display #1 - Topology Configuration]
+Mixers: 2
+Interfaces: 1
+Layers: 2
+
+Destination scaler enabled: No
+Input dimensions: 2944x1840
+Scaled output dimensions: 2944x1840
+
+LayerID DMA3: - srcRec:1472x1840 dstRec:1472x1840 zOrder:0  Fmt:RGB/UBWC pos:   0x0    AlphaBlend:No LogicalBlend:Disable
+LayerID DMA0: - srcRec:  64x64   dstRec:  64x64   zOrder:0  Fmt:RGB/Linear pos:   0x0    AlphaBlend:Yes LogicalBlend:Disable (Cursor)
+
+[Display #1 - Display Statistics]
+
+V-Sync Count: 121819
+Refresh Rate (Measured): 90.0
+
+Frame Count: 18622
+Frame Per Second: 0.8
+
+Underflow Count: 0
+HPD-In Count: 0
+HPD-Out Count: 0
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+[Display #1 - Brightness Configuration]
+Max brightness: 450.0 nits
+Min brightness: 0.0 nits
+OS brightness level: 93% (417.0 nits)
+ABA brightness level: 93% (417.0 nits)
+
+Smooth Brightness: Idle
+Smooth Brightness Transition Time: 47ms
+
+Content Adaptive Brightness (CABL): Disabled
+
+
+[Display #1 - LTM Configuration]
+LTM Supported  = Yes
+LTM Enabled    = NO
+
+[Display #1 - DisplayPort Configuration]
+Bonded Mode: Disabled
+Connection Status: Connected
+Failsafe Mode: Disabled
+
+Sink IEEE OUI: ba-41-59
+Sink Identification String: 
+Sink Hardware Version: 0
+Sink Firmware version: 0.0
+
+Branch IEEE OUI: 00-00-00
+Branch Identification String: 
+Branch Hardware Version: 0
+Branch Firmware version: 0.0
+
+MST Configuration: Disabled
+
+Number of Lanes: 4
+Lane Pre-Emphasis Level: 1 (Max: 3)
+Lane Voltage Swing Level: 1 (Max: 3)
+Link Rate: 5.4Gbps (HBR2)
+
+Resolution: 2944x1840
+Refresh rate: 59.0Hz
+Pixel clock frequency: 522.540000Mhz
+
+Last PSR State: Disabled
+
+HDCP Support: Not supported (Not initialized)
+
+HDCP1.x Capable: No
+
+HDCP2.x Capable: No
+
+Last Requested Minimum Encryption Level: 3
+
+DSC Status: Disabled
+
+Mode List:
+Display-Mode#1-00: 2944x1840 @ 59Hz, PClk:522540000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#1-01: 2944x1840 @ 89Hz, PClk:522540000Hz, Depth: 30bpp, Audio: Yes
+
+Raw EDID:
+  00 FF FF FF FF FF FF 00 30 AE C2 8A 00 00 00 00
+  00 21 01 04 B5 1F 14 78 02 0B D1 AF 51 3D B6 23
+  0B 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+  01 01 01 01 01 01 1E CC 80 50 B0 30 10 74 08 20
+  88 00 38 C3 10 00 00 1B 1E CC 80 50 B0 30 50 70
+  08 20 88 00 38 C3 10 00 00 1B 00 00 00 FE 00 4C
+  45 4E 4F 56 4F 0A 20 20 20 20 20 20 00 00 00 FE
+  00 4C 45 4E 31 34 35 57 51 2B 0A 20 20 20 01 2F
+  02 03 0F 00 E3 05 80 00 E6 06 05 01 8A 6A 02 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 9C
+  
+Downstream Port Type: DisplayPort
+
+Color Space: HDR10
+Max Luminance: 993.486 nits
+Min Luminance: 0.0 nits
+Full Frame Luminance: 496.743 nits
+
+Raw DPCD:
+  0000h-000Fh  :  14 14 C4 01 00 00 01 C0 02 14 00 00 00 09 82 00
+  002Eh-002Fh  :  01 00
+  0060h-006Fh  :  00 11 00 04 0A 02 01 80 00 01 06 00 00 00 00 00
+  0070h-0074h  :  03 3A 80 0B 04
+  0090h        :  00
+  2200h-220Fh  :  14 14 C4 01 00 00 01 C0 02 14 00 00 00 09 82 00
+  F0000h-F0005h:  00 00 00 00 00 00
+  
+Diagnostic and Statistical Data:
+
+EDID checksum mismatches: 0
+
+Full link training attempts: 1
+Fast link training attempts: 0
+No link training attempts: 0
+Clock recovery failures during training: 0
+Channel equalization failures during training: 0
+
+PSR enable requests to sink: 0
+PSR entry requests: 0
+PSR exit requests: 0
+Adaptive sync(Qsync) supported: 1
+
+FEC Status: Disabled
+
+HDR VSC Colorimetry SDP: Supported
+
+Controller Mode: eDP
+
+Audio Endpoint: Enabled (Last Configured Endpoint)
+Audio Streaming: False
+Audio Format: Linear PCM
+Audio Channel Type: Channel 2
+Audio Sample Bit Depth: 24 bit per sample
+Audio Sample Rate: 96kHz
+
+PSR Enter Latency (Average, Min, Max):  0.000ms, 4294967.295ms,  0.000ms
+PSR Enter Requests (Success/Total): 0/0 (   % success)
+
+PSR Exit Latency  (Average, Min, Max):  0.000ms, 4294967.295ms,  0.000ms
+PSR Exit Requests  (Success/Total): 0/0 (   % success)
+
+
+
+[Display #4 - External]
+
+Connection: DisplayPort (Type-C)
+Display Type: External
+
+Mode Set: Yes (Index:18)
+Resolution: 3840x2160
+Refresh rate: 120Hz
+AVR Support: No
+Dynamic Refresh Rates: (73 rates)
+   48.000Hz,  49.000Hz,  50.000Hz,  51.000Hz,  52.000Hz,  53.000Hz,  54.000Hz,  55.000Hz
+   56.000Hz,  57.000Hz,  58.000Hz,  59.000Hz,  60.000Hz,  61.000Hz,  62.000Hz,  63.000Hz
+   64.000Hz,  65.000Hz,  66.000Hz,  67.000Hz,  68.000Hz,  69.000Hz,  70.000Hz,  71.000Hz
+   72.000Hz,  73.000Hz,  74.000Hz,  75.000Hz,  76.000Hz,  77.000Hz,  78.000Hz,  79.000Hz
+   80.000Hz,  81.000Hz,  82.000Hz,  83.000Hz,  84.000Hz,  85.000Hz,  86.000Hz,  87.000Hz
+   88.000Hz,  89.000Hz,  90.000Hz,  91.000Hz,  92.000Hz,  93.000Hz,  94.000Hz,  95.000Hz
+   96.000Hz,  97.000Hz,  98.000Hz,  99.000Hz, 100.000Hz, 101.000Hz, 102.000Hz, 103.000Hz
+  104.000Hz, 105.000Hz, 106.000Hz, 107.000Hz, 108.000Hz, 109.000Hz, 110.000Hz, 111.000Hz
+  112.000Hz, 113.000Hz, 114.000Hz, 115.000Hz, 116.000Hz, 117.000Hz, 118.000Hz, 119.000Hz
+  120.000Hz
+
+Display State: On
+VSync Interrupt: Enabled
+Power Savings Max Level: 2
+Power Savings Current Level: 0
+Core Clock Vote: 564MHz
+Bandwidth Vote (AB): 7211MB/s
+Bandwidth Vote (IB): 800MB/s
+
+Max Luminance: 1435767 millinits
+Min Luminance: 0 millinits
+Blend Space: HDR10
+Display Color Blend Space : sRGB
+Bits Per Pixel: 24
+
+[Display #4 - Topology Configuration]
+Mixers: 2
+Interfaces: 1
+Layers: 2
+
+Destination scaler enabled: No
+Input dimensions: 0x0
+Scaled output dimensions: 0x0
+
+LayerID DMA4: - srcRec:1912x1888 dstRec:1912x1888 zOrder:0  Fmt:RGB/UBWC pos:   8x168  AlphaBlend:No LogicalBlend:Disable
+LayerID DMA5: - srcRec:1920x2160 dstRec:1920x2160 zOrder:0  Fmt:RGB/UBWC pos:   0x0    AlphaBlend:Yes LogicalBlend:Disable
+
+[Display #4 - Display Statistics]
+
+V-Sync Count: 141093
+Refresh Rate (Measured): 119.9
+
+Frame Count: 106839
+Frame Per Second: 95.5
+
+Underflow Count: 0
+HPD-In Count: 2
+HPD-Out Count: 1
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+[Display #4 - DisplayPort Configuration]
+Bonded Mode: Disabled
+Connection Status: Connected
+Failsafe Mode: Disabled
+
+Sink IEEE OUI: 00-0c-e7
+Sink Identification String: 
+Sink Hardware Version: 0
+Sink Firmware version: 0.0
+
+Branch IEEE OUI: 00-00-00
+Branch Identification String: 
+Branch Hardware Version: 0
+Branch Firmware version: 0.0
+
+MST Configuration: Disabled
+
+Number of Lanes: 4
+Lane Pre-Emphasis Level: 0 (Max: 3)
+Lane Voltage Swing Level: 2 (Max: 3)
+Link Rate: 8.1Gbps (HBR3)
+
+Resolution: 3840x2160
+Refresh rate: 60.0Hz
+Pixel clock frequency: 594.0Mhz
+
+Last PSR State: Disabled
+
+HDCP Support: Not supported
+HDCP Status: Idle (not enabled)
+
+HDCP1.x Capable: Yes
+
+HDCP2.x Capable: Yes
+
+Last Requested Minimum Encryption Level: 3
+
+DSC Status: Disabled
+
+Mode List:
+Display-Mode#4-00: 3840x2160 @ 60Hz, PClk:594000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-01: 2560x1440 @ 119Hz, PClk:497750000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-02: 3840x2160 @ 50Hz, PClk:594000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-03: 1920x1080 @ 60Hz, PClk:148500000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-04: 1920x1080 @ 50Hz, PClk:148500000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-05: 1920x1080 @ 100Hz, PClk:297000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-06: 1920x1080 @ 120Hz, PClk:297000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-07: 1280x720 @ 60Hz, PClk:74250000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-08: 1280x720 @ 50Hz, PClk:74250000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-09: 1280x720 @ 60Hz, PClk:74250000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-10: 1280x960 @ 60Hz, PClk:108000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-11: 1280x1024 @ 60Hz, PClk:108000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-12: 1680x1050 @ 59Hz, PClk:119000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-13: 1440x900 @ 59Hz, PClk:88750000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-14: 640x480 @ 59Hz, PClk:25175000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-15: 800x600 @ 60Hz, PClk:40000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-16: 1024x768 @ 60Hz, PClk:65000000Hz, Depth: 30bpp, Audio: Yes
+Display-Mode#4-17: 3840x2160 @ 100Hz, PClk:887880000Hz, Depth: 24bpp, Audio: Yes
+Display-Mode#4-18: 3840x2160 @ 120Hz, PClk:1075805000Hz, Depth: 24bpp, Audio: Yes
+
+Raw EDID:
+  00 FF FF FF FF FF FF 00 20 A3 7E 10 00 00 6D 61
+  01 24 01 04 B5 3C 22 78 3B A5 21 AF 4D 34 BB 27
+  0C 50 54 21 08 00 81 C0 81 40 81 80 B3 00 95 00
+  A9 00 01 01 01 01 08 E8 00 30 F2 70 5A 80 B0 58
+  8A 00 55 50 21 00 00 1E 6F C2 00 A0 A0 A0 55 50
+  30 20 35 00 55 50 21 00 00 1E 00 00 00 FC 00 32
+  37 47 58 0A 20 20 20 20 20 20 20 20 00 00 00 FD
+  0C 30 78 13 13 6E 01 0A 20 20 20 20 20 20 02 3D
+  02 03 52 F0 4A 61 60 10 1F 40 3F 04 13 12 03 35
+  0F 7F 07 15 07 50 57 06 01 3D 07 C0 5F 7E 07 5F
+  7E 01 67 04 07 83 01 00 00 E2 00 EA E3 05 FF 01
+  E6 06 0D 01 9B 88 02 E5 01 8B 84 90 01 74 1A 00
+  00 03 0B 30 78 00 20 A0 06 80 09 78 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20
+  70 20 79 05 00 22 00 28 48 8C 0D 00 FF 0E 4F 00
+  07 00 1F 00 6F 08 68 00 5A 00 07 00 5D 6A 10 00
+  FF 0E 4F 00 07 00 1F 00 6F 08 7E 00 70 00 07 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 40
+  
+Downstream Port Type: DisplayPort
+
+Color Space: HDR10
+Max Luminance: 1435.767 nits
+Min Luminance: 0.0 nits
+Full Frame Luminance: 951.365 nits
+
+Raw DPCD:
+  0000h-000Fh  :  12 14 C4 81 01 00 01 80 02 02 06 00 00 00 84 00
+  002Eh-002Fh  :  00 00
+  0060h-006Fh  :  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0070h-0074h  :  00 00 00 00 00
+  0090h        :  00
+  2200h-220Fh  :  14 1E C4 81 01 00 01 80 02 02 06 00 00 00 84 00
+  F0000h-F0005h:  20 1E 80 55 04 00
+  
+Diagnostic and Statistical Data:
+
+EDID checksum mismatches: 0
+
+Full link training attempts: 2
+Fast link training attempts: 0
+No link training attempts: 0
+Clock recovery failures during training: 0
+Channel equalization failures during training: 0
+
+PSR enable requests to sink: 0
+PSR entry requests: 0
+PSR exit requests: 0
+Adaptive sync(Qsync) supported: 0
+
+FEC Status: Disabled
+
+HDR VSC Colorimetry SDP: Supported
+
+Controller Mode: DP-Altmode
+
+Audio Endpoint: Not Enabled
+
+
+
+[Display #5 - External 2]
+
+Connection: DisplayPort (Type-C)
+Display Type: External
+
+Mode Set: No (Index:-1)
+Resolution: 0x0
+Refresh rate: 0Hz
+AVR Support: No
+Dynamic Refresh Rates: (0 rates)
+
+Display State: Off
+VSync Interrupt: Enabled
+Power Savings Max Level: 2
+Power Savings Current Level: 0
+Core Clock Vote: 0MHz
+Bandwidth Vote (AB): 0MB/s
+Bandwidth Vote (IB): 0MB/s
+
+Max Luminance: 0 millinits
+Min Luminance: 0 millinits
+Blend Space: Rec. 601
+Display Color Blend Space : Rec. 601
+Bits Per Pixel: 24
+
+[Display #5 - Topology Configuration]
+Mixers: 0
+Interfaces: 0
+Layers: 0
+
+Destination scaler enabled: No
+Input dimensions: 0x0
+Scaled output dimensions: 0x0
+
+
+[Display #5 - Display Statistics]
+
+V-Sync Count: 0
+Refresh Rate (Measured): 0.0
+
+Frame Count: 0
+Frame Per Second: 0.0
+
+Underflow Count: 0
+HPD-In Count: 0
+HPD-Out Count: 0
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+
+
+[Display #6 - External 3]
+
+Connection: DisplayPort (Type-C)
+Display Type: External
+
+Mode Set: No (Index:-1)
+Resolution: 0x0
+Refresh rate: 0Hz
+AVR Support: No
+Dynamic Refresh Rates: (0 rates)
+
+Display State: Off
+VSync Interrupt: Enabled
+Power Savings Max Level: 2
+Power Savings Current Level: 0
+Core Clock Vote: 0MHz
+Bandwidth Vote (AB): 0MB/s
+Bandwidth Vote (IB): 0MB/s
+
+Max Luminance: 0 millinits
+Min Luminance: 0 millinits
+Blend Space: Rec. 601
+Display Color Blend Space : Rec. 601
+Bits Per Pixel: 24
+
+[Display #6 - Topology Configuration]
+Mixers: 0
+Interfaces: 0
+Layers: 0
+
+Destination scaler enabled: No
+Input dimensions: 0x0
+Scaled output dimensions: 0x0
+
+
+[Display #6 - Display Statistics]
+
+V-Sync Count: 0
+Refresh Rate (Measured): 0.0
+
+Frame Count: 0
+Frame Per Second: 0.0
+
+Underflow Count: 0
+HPD-In Count: 0
+HPD-Out Count: 0
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+
+
+[Display #8 - External 4]
+
+Connection: DisplayPort (Type-C)
+Display Type: External
+
+Mode Set: No (Index:-1)
+Resolution: 0x0
+Refresh rate: 0Hz
+AVR Support: No
+Dynamic Refresh Rates: (0 rates)
+
+Display State: Off
+VSync Interrupt: Enabled
+Power Savings Max Level: 2
+Power Savings Current Level: 0
+Core Clock Vote: 0MHz
+Bandwidth Vote (AB): 0MB/s
+Bandwidth Vote (IB): 0MB/s
+
+Max Luminance: 0 millinits
+Min Luminance: 0 millinits
+Blend Space: Rec. 601
+Display Color Blend Space : Rec. 601
+Bits Per Pixel: 24
+
+[Display #8 - Topology Configuration]
+Mixers: 0
+Interfaces: 0
+Layers: 0
+
+Destination scaler enabled: No
+Input dimensions: 0x0
+Scaled output dimensions: 0x0
+
+
+[Display #8 - Display Statistics]
+
+V-Sync Count: 0
+Refresh Rate (Measured): 0.0
+
+Frame Count: 0
+Frame Per Second: 0.0
+
+Underflow Count: 0
+HPD-In Count: 0
+HPD-Out Count: 0
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+
+
+[Display #9 - External 5]
+
+Connection: DisplayPort (Type-C)
+Display Type: External
+
+Mode Set: No (Index:-1)
+Resolution: 0x0
+Refresh rate: 0Hz
+AVR Support: No
+Dynamic Refresh Rates: (0 rates)
+
+Display State: Off
+VSync Interrupt: Enabled
+Power Savings Max Level: 2
+Power Savings Current Level: 0
+Core Clock Vote: 0MHz
+Bandwidth Vote (AB): 0MB/s
+Bandwidth Vote (IB): 0MB/s
+
+Max Luminance: 0 millinits
+Min Luminance: 0 millinits
+Blend Space: Rec. 601
+Display Color Blend Space : Rec. 601
+Bits Per Pixel: 24
+
+[Display #9 - Topology Configuration]
+Mixers: 0
+Interfaces: 0
+Layers: 0
+
+Destination scaler enabled: No
+Input dimensions: 0x0
+Scaled output dimensions: 0x0
+
+
+[Display #9 - Display Statistics]
+
+V-Sync Count: 0
+Refresh Rate (Measured): 0.0
+
+Frame Count: 0
+Frame Per Second: 0.0
+
+Underflow Count: 0
+HPD-In Count: 0
+HPD-Out Count: 0
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+
+
+[Display #10 - External 6]
+
+Connection: DisplayPort (Type-C)
+Display Type: External
+
+Mode Set: No (Index:-1)
+Resolution: 0x0
+Refresh rate: 0Hz
+AVR Support: No
+Dynamic Refresh Rates: (0 rates)
+
+Display State: Off
+VSync Interrupt: Enabled
+Power Savings Max Level: 2
+Power Savings Current Level: 0
+Core Clock Vote: 0MHz
+Bandwidth Vote (AB): 0MB/s
+Bandwidth Vote (IB): 0MB/s
+
+Max Luminance: 0 millinits
+Min Luminance: 0 millinits
+Blend Space: Rec. 601
+Display Color Blend Space : Rec. 601
+Bits Per Pixel: 24
+
+[Display #10 - Topology Configuration]
+Mixers: 0
+Interfaces: 0
+Layers: 0
+
+Destination scaler enabled: No
+Input dimensions: 0x0
+Scaled output dimensions: 0x0
+
+
+[Display #10 - Display Statistics]
+
+V-Sync Count: 0
+Refresh Rate (Measured): 0.0
+
+Frame Count: 0
+Frame Per Second: 0.0
+
+Underflow Count: 0
+HPD-In Count: 0
+HPD-Out Count: 0
+HPD-Irq Count: 0
+FIFO Overflow Count: 0
+SDP Collision Count: 0
+Audio Error Count: 0
+
+
+
+[Display Resource Manager Diagnostics]
+
+
+Display-Client#4-0: Bandwidth-1075805000,Mixers-2,Mixer0ID-0x3,Mixer1ID-0x4
+Display-Client#1-1: Bandwidth-522540000,Mixers-2,Mixer0ID-0x1,Mixer1ID-0x2
+
+Total Displays Available: 2
+Total Bandwidth Available: 1387639000
+
+[Scenario Manager Diagnostics]
+
+Total Registered Clients: 1
+Current Scenario Bitmask: 0x00090001
+Display Optimization Level: 1
+Power Mode: 1
+System Composition Mode: 2

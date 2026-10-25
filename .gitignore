@@ -1,0 +1,18 @@
+# build output
+*.exe
+bin/
+
+# Ghidra installation and project database (not part of the tool)
+/tools/
+/ghproj/
+/ghproj2/
+/export/
+/export_bd/
+/work/
+
+# python
+__pycache__/
+*.pyc
+
+# local captures
+*.log
