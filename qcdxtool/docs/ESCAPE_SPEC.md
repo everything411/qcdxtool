@@ -236,19 +236,37 @@ Each returns **1 or 0 - a capability flag, not the current value.**
 | `igc` | `FUN_140114190` | no |
 | `AuxWrite` | `FUN_1401128E0` | no |
 
-"Persists" means the handler calls `FUN_140138458(displayId, 10, cfg, 0x14)`,
-which asks the miniport settings API to store the configuration at
-`Miniport\DISPLAY\Config`. Two caveats, both verified:
+"Persists" means the handler calls `FUN_140138458(displayId, tag, cfg, size)`,
+which stores the blob through the miniport settings API. The setter **ignores
+the return value**, so `status:0` proves the value was applied, not stored - but
+the store is real and is honoured across reboots:
 
-* the setter **ignores the return value** of that call, so `status:0` only proves
-  the value was applied, not stored;
-* on the test machine that registry key
-  (`HKLM\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-...}\0000\Miniport\DISPLAY\Config`)
-  contains a single value, `LTMC` (a path to `LTMConfig.xml`) - no per-display
-  colour blob was found.
+```
+HKLM\SOFTWARE\QCOM\Drivers\DxKMD\Miniport\DISPLAY\Config
+```
 
-Treat a wrong value as potentially surviving a reboot, but do not assume the
-store is working either - it has not been observed to hold colour data.
+Value names are 4-character tags taken from the table at `0x1401E4F80`:
+
+```
+_ROM ROM# BLCP BLC# PPCC PCC# PLGC LGC# PIGC IGC# PGRT GRT# PBRT BRT#
+PBRC BRC# HSIC HSI# PWGM WGM# DITH DIT# SHRP SHR# RDIO RDI# DEVT LTMC ROE#
+```
+
+Two of them hold colour state:
+
+| value | size | layout |
+|---|---|---|
+| `SHRP` | 4 | sharpness |
+| `HSIC` | 20 | dword 0: header/flag; dword 4: `hue`; dword 8: `saturation`; dword 12: `intensity`; dword 16: `contrast` |
+
+The field offsets follow from which stack slot each setter writes
+(`FUN_140113B50` -> +4, `FUN_140113C50` -> +8, `FUN_140113D50` -> +12,
+`FUN_140113E50` -> +16).
+
+To check what is actually stored, read that key. A neutral configuration is
+`SHRP = 00 00 00 00` and `HSIC = 01 00 00 00` followed by sixteen zero bytes.
+`get:displayId:N,displaycaps:<key>` cannot be used for this - it reports a
+capability flag, not the current value.
 
 Value ranges (from the `FUN_140115C10(value, min, max)` clamps):
 
