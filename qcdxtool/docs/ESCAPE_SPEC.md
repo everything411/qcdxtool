@@ -251,15 +251,31 @@ Value ranges (from the `FUN_140115C10(value, min, max)` clamps):
 persist, so `qcdx_edid` refuses them unless `--allow-internal` is given, and
 refuses the persisting keys unless `--persist-ok` is given.
 
-### 4.5 Display slot map (measured)
+### 4.5 Display slots
 
-| slot | kind |
-|---|---|
-| 1, 2, 3, 7 | internal (`plugable:0`) |
-| 4, 5, 6, 8, 9, 10 | external (`plugable:1`) |
+Slots are a flat index into a per-display array; the driver clamps
+`idx > 10` to 0 and has **no hard-coded slot roles**. Two capability bits in
+`DAT_140388A88[idx]` describe a slot:
 
-Index 1 is the internal eDP panel. External devices show up on the first free
-external slot, commonly 4.
+```c
+plugable      = (DAT_140388A88[idx] & 0x020000) != 0;   /* FUN_140116AF0, bit 17 */
+screencapture = (DAT_140388A88[idx] & 0x4000000) != 0;  /* FUN_140116BC0, bit 26 */
+```
+
+Measured on the test machine:
+
+| slot | plugable | screencapture | established by |
+|---|---|---|---|
+| 1 | 0 | 1 | the dump reports `[Display #1 - Primary] Connection: eDP` |
+| 2, 3, 7 | 0 | **0** | never appear in any dump; both bits clear |
+| 4 .. 10 | 1 | 1 | dumps report `Connection: DisplayPort (Type-C)` |
+
+Only slot 1 is confirmed to be a real internal panel. Slots 2/3/7 look like
+unused slots rather than panels, so "plugable == 0" is not the same statement
+as "internal panel" - it only holds for slot 1 on this machine.
+
+Writing to a `plugable == 0` slot is still refused by default: it is either the
+internal panel or an absent slot, and neither is a sensible write target.
 
 ### 4.6 `AuxRead` operational constraints
 
@@ -330,4 +346,5 @@ DriverStore can hold several copies; always resolve the one that
 `tools/audit.py` re-derives the three command tables, the five key strings and
 the persistence classification straight from the binary and compares them with
 this document; it should report "all checks passed".
+
 

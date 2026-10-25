@@ -257,7 +257,7 @@ static class QcdxEdid
                     if (tgt == 1 || tgt == 2 || tgt == 3 || tgt == 7)
                     {
                         Console.Error.WriteLine(string.Format(
-                            "[refuse] displayId:{0} is an internal slot. Writing it may change panel color/link state and persists.", tgt));
+                            "[refuse] displayId:{0} is a non-plugable slot (internal panel or unused). Writing it changes panel state and persists.", tgt));
                         Console.Error.WriteLine("         Pass --allow-internal to confirm.");
                         return 6;
                     }
@@ -398,6 +398,7 @@ static class QcdxEdid
         }
     }
 }
+
 
 
 
