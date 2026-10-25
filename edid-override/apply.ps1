@@ -1,39 +1,41 @@
 <#
   apply.ps1 - install and inject an EDID override into qcdxkm8380.
 
-  The override lives in RAM only. The driver frees it when the display stops
-  (unplug / power off), so it must be re-injected after every hotplug and
-  after every reboot. There is no daemon: run this script when you need the
-  override.
+  The override lives in RAM only. The driver reads it when the display starts
+  and frees it when the display stops, so it must be re-injected after every
+  hotplug and after every reboot.
 
   ORDER MATTERS
   -------------
-  The override can only be injected while the target display is STOPPED.
-  The driver reads the slot when the display starts. So the sequence is:
+  The override can only be injected while the target display is STOPPED,
+  because the driver reads the slot when the display starts. So the sequence
+  is always:
 
-      copy XML  ->  unplug display  ->  clear + load  ->  plug display back
+      copy XML  ->  stop the display  ->  clear + load  ->  start the display
 
-  A same-boot `load` without a preceding `clear` may not replace an existing
-  slot, so `clear` is always issued first.
+  `clear` must precede `load`; a same-boot `load` alone may not replace an
+  existing slot.
 
   Usage:
-      .\apply.ps1                                   # sample 4K100/4K120 file, slot 4
-      .\apply.ps1 -File my.xml -Index 4
-      .\apply.ps1 -Index 4 -Auto                    # skip the prompts
-      .\apply.ps1 -Revert -Index 4                  # remove override, restore stock EDID
+      .\apply.ps1 -Index 4                  # full run: install, inject, verify
+      .\apply.ps1 -Index 4 -Auto            # same, but do not wait for Enter
+      .\apply.ps1 -Quick -Index 4           # XML already installed: just re-inject
+      .\apply.ps1 -Revert -Index 4          # remove the override
 
-  Requires administrator only for writing C:\Windows\edidoverride.xml.
+  Administrator is needed only to write C:\Windows\edidoverride.xml.
   The escape calls themselves need no elevation.
 #>
 param(
     [string]$File   = (Join-Path $PSScriptRoot 'samples\edidoverride_M.xml'),
     [int]$Index     = 4,
     [switch]$Auto,
+    [switch]$Quick,
     [switch]$Revert
 )
 
 $ErrorActionPreference = 'Continue'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
+$target = 'C:\Windows\edidoverride.xml'
 
 function Find-Exe {
     foreach ($p in @(
@@ -43,10 +45,10 @@ function Find-Exe {
     return $null
 }
 
-function Get-DisplayIds([string]$exe) {
-    $s = (& $exe --get 'get:displayId' 2>&1 | Select-String '^status').Line
+function Get-DisplayIds([string]$exePath) {
+    $s = (& $exePath --get 'get:displayId' 2>&1 | Select-String '^status').Line
     if (-not $s) { return @() }
-    return @([regex]::Matches($s, 'displayId:(\d+)') | ForEach-Object { [int]$_.Groups[1].Value })
+    return @([regex]::Matches($s, 'displayId:(\d+)') | ForEach-Object { [int]::Parse($_.Groups[1].Value) })
 }
 
 function Test-Admin {
@@ -55,77 +57,100 @@ function Test-Admin {
     return $pr.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
+function Inject([string]$exePath, [int]$slot) {
+    & $exePath --index $slot --clear 2>&1 | Select-String 'cmd\] status' | ForEach-Object { '  clear: ' + $_.Line.Trim() }
+    & $exePath --index $slot         2>&1 | Select-String 'cmd\] status' | ForEach-Object { '  load : ' + $_.Line.Trim() }
+}
+
 $exe = Find-Exe
 if (-not $exe) {
     Write-Host "qcdx_edid.exe not found. Build it first (see qcdxtool/README.md)." -ForegroundColor Red
     exit 1
 }
 
-$target = "C:\Windows\edidoverride.xml"
-
+# ---------------------------------------------------------------- revert --
 if ($Revert) {
     Write-Host "=== revert ===" -ForegroundColor Cyan
     if (Test-Path $target) {
-        if (-not (Test-Admin)) { Write-Host "  need administrator to remove $target" -ForegroundColor Red; exit 2 }
+        if (-not (Test-Admin)) {
+            Write-Host "  administrator required to remove $target" -ForegroundColor Red
+            exit 2
+        }
         Remove-Item $target -Force
         Write-Host "  removed $target"
     } else {
         Write-Host "  $target not present"
     }
     Write-Host "  clearing slot $Index"
-    & $exe --index $Index --clear 2>&1 | Select-String 'cmd\] status' | ForEach-Object { '  ' + $_.Line }
+    & $exe --index $Index --clear 2>&1 | Select-String 'cmd\] status' | ForEach-Object { '  ' + $_.Line.Trim() }
     Write-Host ""
     Write-Host "Done. Re-plug the display to get the stock EDID back." -ForegroundColor Green
     exit 0
 }
 
-# ---- 1. install the XML -------------------------------------------------
+# ----------------------------------------------------------- quick path --
+# The XML is already in place; only re-inject. No prompts, no admin needed.
+if ($Quick) {
+    Write-Host "=== quick re-inject (slot $Index) ===" -ForegroundColor Cyan
+    if (-not (Test-Path $target)) {
+        Write-Host "  $target is missing - run once without -Quick to install it." -ForegroundColor Red
+        exit 1
+    }
+    if ((Get-DisplayIds $exe) -contains $Index) {
+        Write-Host "  slot $Index is active. Unplug the display first: the driver reads the" -ForegroundColor Yellow
+        Write-Host "  override when the display starts, so it cannot be replaced live." -ForegroundColor Yellow
+        exit 3
+    }
+    Inject $exe $Index
+    Write-Host ""
+    Write-Host "  Plug the display back in." -ForegroundColor Green
+    exit 0
+}
+
+# --------------------------------------------------------- 1. install XML --
 Write-Host "=== 1. install override ===" -ForegroundColor Cyan
-if (-not (Test-Path $File)) { Write-Host "  file not found: $File" -ForegroundColor Red; exit 1 }
+if (-not (Test-Path $File)) {
+    Write-Host "  file not found: $File" -ForegroundColor Red
+    exit 1
+}
 if (-not (Test-Admin)) {
     Write-Host "  administrator required to write $target" -ForegroundColor Red
-    Write-Host "  re-run from an elevated prompt, or copy the file yourself and rerun with -Auto"
+    Write-Host "  re-run elevated, or copy the file yourself and then use -Quick"
     exit 2
 }
 Copy-Item $File $target -Force
-Write-Host "  installed $File"
-Write-Host "  -> $target"
+Write-Host "  installed $File -> $target"
 
-# ---- 2. wait for the display to stop ------------------------------------
+# -------------------------------------------------- 2. wait for it to stop --
 Write-Host ""
 Write-Host "=== 2. stop the display ===" -ForegroundColor Cyan
-$ids = Get-DisplayIds $exe
-if ($ids -contains $Index) {
+if ((Get-DisplayIds $exe) -contains $Index) {
     Write-Host "  slot $Index is currently active." -ForegroundColor Yellow
     if (-not $Auto) {
         Write-Host "  Unplug the display (or power it off), then press Enter..."
         Read-Host | Out-Null
     } else {
-        Write-Host "  -Auto given: waiting up to 60s for the display to disappear..."
+        Write-Host "  -Auto: waiting up to 60s for the display to disappear..."
         $deadline = (Get-Date).AddSeconds(60)
         while ((Get-Date) -lt $deadline) {
             if (-not ((Get-DisplayIds $exe) -contains $Index)) { break }
             Start-Sleep -Milliseconds 500
         }
     }
-    $ids = Get-DisplayIds $exe
-    if ($ids -contains $Index) {
+    if ((Get-DisplayIds $exe) -contains $Index) {
         Write-Host "  slot $Index is still active; cannot inject safely." -ForegroundColor Red
-        Write-Host "  Unplug it and run this script again." -ForegroundColor Red
+        Write-Host "  Unplug it and re-run." -ForegroundColor Red
         exit 3
     }
 }
 Write-Host "  slot $Index is stopped."
 
-# ---- 3. clear + load ----------------------------------------------------
+# ------------------------------------------------------------- 3. inject --
 Write-Host ""
 Write-Host "=== 3. inject ===" -ForegroundColor Cyan
-$out = & $exe --index $Index --clear 2>&1
-($out | Select-String 'cmd\] status' | ForEach-Object { '  clear: ' + $_.Line.Trim() })
-$out = & $exe --index $Index 2>&1
-($out | Select-String 'cmd\] status' | ForEach-Object { '  load : ' + $_.Line.Trim() })
+Inject $exe $Index
 
-# ---- 4. plug back -------------------------------------------------------
+# --------------------------------------------------------- 4. start again --
 Write-Host ""
 Write-Host "=== 4. start the display ===" -ForegroundColor Cyan
 if (-not $Auto) {
@@ -133,25 +158,31 @@ if (-not $Auto) {
     Read-Host | Out-Null
 }
 
-# ---- 5. verify ----------------------------------------------------------
+# ------------------------------------------------------------- 5. verify --
 Write-Host ""
 Write-Host "=== 5. verify ===" -ForegroundColor Cyan
-$ids = Get-DisplayIds $exe
-if (-not ($ids -contains $Index)) {
-    Write-Host "  slot $Index is not active yet; plug the display in and re-run just this check." -ForegroundColor Yellow
+if (-not ((Get-DisplayIds $exe) -contains $Index)) {
+    Write-Host "  slot $Index is not active yet; plug it in and check again with:" -ForegroundColor Yellow
+    Write-Host "    .\apply.ps1 -Quick -Index $Index   (after unplugging)" -ForegroundColor Yellow
     exit 4
 }
+
+$dir = 'C:\data\test'
+if (-not (Test-Path $dir)) { New-Item -ItemType Directory $dir -Force | Out-Null }
 & $exe --dump 'override_check.txt' 2>&1 | Out-Null
-$f = 'C:\data\test\override_check.txt'
-if (Test-Path $f) {
-    $modes = Select-String -Path $f -Pattern ("Display-Mode#" + $Index + "-")
+$dump = Join-Path $dir 'override_check.txt'
+if (Test-Path $dump) {
+    $modes = Select-String -Path $dump -Pattern ("Display-Mode#" + $Index + "-")
     Write-Host "  driver mode list for slot $Index ($($modes.Count) entries):"
     $modes | ForEach-Object { Write-Host ("   " + $_.Line.Trim()) }
+
+    # also show what EDID the driver is serving, so a stale override is obvious
+    $recent = Select-String -Path $dump -Pattern 'Raw EDID' -Context 0,1 | Select-Object -First 1
+    if ($recent) { Write-Host ("  Raw EDID: " + $recent.Context.PostContext[0].Trim()) }
 } else {
     Write-Host "  dump not available" -ForegroundColor Yellow
 }
 
 Write-Host ""
 Write-Host "Pick a mode in Settings > System > Display > Advanced display." -ForegroundColor Green
-Write-Host "Note: the monitor OSD may round 119.88 to 119; the mode itself is exact." -ForegroundColor DarkGray
-
+Write-Host "The mode list above is the driver's own view; Windows derives its list from it." -ForegroundColor DarkGray

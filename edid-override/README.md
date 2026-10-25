@@ -49,6 +49,13 @@ install XML  ->  stop the display  ->  clear + load  ->  start the display  ->  
 It refuses to inject while the target slot is active. `-Auto` skips the two
 Enter prompts (it waits up to 60 s for the display to disappear instead).
 
+Re-inject after a reboot or a hotplug, when the XML is already installed
+(no prompts, no administrator, display must be unplugged):
+
+```powershell
+.\apply.ps1 -Quick -Index 4
+```
+
 Revert:
 
 ```powershell
@@ -95,3 +102,4 @@ its length and bytes should match the generated `.bin`.
 |---|---|
 | `samples/edid_27GX_4k100_120.bin` | ready-made override EDID (base + CEA + Type VII 4K100/4K120) |
 | `samples/edidoverride_M.xml` | the same EDID in the driver's XML form |
+
