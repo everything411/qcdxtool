@@ -26,6 +26,25 @@ static class QcdxEdid
     [DllImport("gdi32.dll")] static extern int D3DKMTCCloseAdapter(IntPtr p);
     [DllImport("gdi32.dll")] static extern int D3DKMTEscape(IntPtr p);
 
+    // Windows removed gdi32!D3DKMTCCloseAdapter at some point (missing on build
+    // 29695.1001), and a P/Invoke to a missing export throws
+    // EntryPointNotFoundException. Cleanup is best effort: the kernel releases
+    // the handles when the process exits, so a missing export must not turn a
+    // successful command into a crash after the result has been printed.
+    static void TryDestroyDevice(IntPtr p)
+    {
+        try { D3DKMTDestroyDevice(p); }
+        catch (EntryPointNotFoundException) { }
+        catch (DllNotFoundException) { }
+    }
+
+    static void TryCloseAdapter(IntPtr p)
+    {
+        try { D3DKMTCCloseAdapter(p); }
+        catch (EntryPointNotFoundException) { }
+        catch (DllNotFoundException) { }
+    }
+
     static int Num(string s)
     {
         s = s.Trim();
@@ -173,8 +192,8 @@ static class QcdxEdid
                     for (int j = 0; j < 16; j++) sb.Append(string.Format("{0:x2} ", Marshal.ReadByte(data, 0x8C + k + j)));
                 }
                 Console.WriteLine("[c2 block]" + sb.ToString());
-                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); D3DKMTDestroyDevice(create);
-                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); D3DKMTCCloseAdapter(open);
+                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); TryDestroyDevice(create);
+                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); TryCloseAdapter(open);
                 return 0;
             }
 
@@ -189,6 +208,12 @@ static class QcdxEdid
                 for (int i = 0; i < nb.Length && i < 0x60; i++) Marshal.WriteByte(data, 0x098 + i, nb[i]);
                 Marshal.WriteByte(data, 0x098 + nb.Length, 0);
 
+                // The driver writes into C:\data\test but never creates it; a
+                // missing directory surfaces only as status 4 after the escape.
+                const string dumpDir = @"C:\data\test";
+                try { System.IO.Directory.CreateDirectory(dumpDir); }
+                catch (Exception ex) { Console.Error.WriteLine("[err] cannot create " + dumpDir + ": " + ex.Message); }
+
                 Console.WriteLine(string.Format("[.. ] C2 cmd=0x105 file=\"{0}\"", dumpName));
                 Zero(esc, ESCAPE_ARG_SIZE);
                 W(esc, 0x00, hAdapter);
@@ -199,9 +224,11 @@ static class QcdxEdid
                 W(esc, 0x18, 0x4854u);
                 st = D3DKMTEscape(esc);
                 Console.WriteLine(st == 0 ? "[ok ] escape OK" : string.Format("[err] escape 0x{0:X8}", st));
-                Console.WriteLine(string.Format("[dump] status @+0xD8 = {0}", R(data, 0xD8)));
-                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); D3DKMTDestroyDevice(create);
-                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); D3DKMTCCloseAdapter(open);
+                uint dumpStatus = R(data, 0xD8);
+                Console.WriteLine(string.Format("[dump] status @+0xD8 = {0}{1}", dumpStatus,
+                    dumpStatus == 0 ? "" : "   (target dir missing or not writable?)"));
+                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); TryDestroyDevice(create);
+                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); TryCloseAdapter(open);
                 return 0;
             }
 
@@ -224,8 +251,8 @@ static class QcdxEdid
                 Console.WriteLine(st == 0 ? "[ok ] escape OK" : string.Format("[err] escape 0x{0:X8}", st));
                 Console.WriteLine(string.Format("[clk] +0x98 = {0} (0x{0:X})", R(data, 0x98)));
                 Console.WriteLine(string.Format("[clk] +0x9C = {0} (0x{0:X})", R(data, 0x9C)));
-                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); D3DKMTDestroyDevice(create);
-                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); D3DKMTCCloseAdapter(open);
+                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); TryDestroyDevice(create);
+                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); TryCloseAdapter(open);
                 return 0;
             }
 
@@ -340,8 +367,8 @@ static class QcdxEdid
                         }
                     }
                 }
-                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); D3DKMTDestroyDevice(create);
-                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); D3DKMTCCloseAdapter(open);
+                Zero(create, CREATE_DEVICE_SIZE); W(create, 0x00, hDevice); TryDestroyDevice(create);
+                Zero(open, OPEN_ADAPTER_SIZE); W(open, 0x00, hAdapter); TryCloseAdapter(open);
                 return 0;
             }
 
@@ -385,10 +412,10 @@ static class QcdxEdid
             // 5. cleanup
             Zero(create, CREATE_DEVICE_SIZE);
             W(create, 0x00, hDevice);
-            D3DKMTDestroyDevice(create);
+            TryDestroyDevice(create);
             Zero(open, OPEN_ADAPTER_SIZE);
             W(open, 0x00, hAdapter);
-            D3DKMTCCloseAdapter(open);
+            TryCloseAdapter(open);
             return st;
         }
         finally
@@ -398,6 +425,8 @@ static class QcdxEdid
         }
     }
 }
+
+
 
 
 

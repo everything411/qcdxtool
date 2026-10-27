@@ -137,6 +137,13 @@ python tools\audit.py
   resolve the one `HKLM\SYSTEM\CurrentControlSet\Services\QCDX` loads.
 * The escape result is **not** the NTSTATUS. Each command writes its own status
   into the private data block; see the spec for the offsets.
+* `gdi32!D3DKMTCCloseAdapter` no longer exists on Windows build 29695.1001 (the
+  other four `D3DKMT*` exports are still there). The tool treats adapter and
+  device cleanup as best effort so a removed export cannot turn a successful
+  command into a crash on exit.
+* `qcdx_edid --dump` creates `C:\data\test` for you; the driver only writes
+  there and reports `status @+0xD8 = 4` if the directory is missing.
+
 
 
 
