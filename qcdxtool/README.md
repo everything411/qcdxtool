@@ -137,12 +137,18 @@ python tools\audit.py
   resolve the one `HKLM\SYSTEM\CurrentControlSet\Services\QCDX` loads.
 * The escape result is **not** the NTSTATUS. Each command writes its own status
   into the private data block; see the spec for the offsets.
-* `gdi32!D3DKMTCCloseAdapter` no longer exists on Windows build 29695.1001 (the
-  other four `D3DKMT*` exports are still there). The tool treats adapter and
-  device cleanup as best effort so a removed export cannot turn a successful
-  command into a crash on exit.
+* The `D3DKMT*` entry points are named `D3DKMT` + verb: `D3DKMTOpenAdapterFromGdiDisplayName`,
+  `D3DKMTCreateDevice`, `D3DKMTEscape`, `D3DKMTDestroyDevice`, **`D3DKMTCloseAdapter`**.
+  Note there is no `C` between `D3DKMT` and `CloseAdapter` - an early version of
+  this tool spelled it `D3DKMTCCloseAdapter`, which does not exist, so every run
+  completed its work and then died in cleanup with
+  `EntryPointNotFoundException` (CLR20r3, exit code `0xE0434352`). All five names
+  are present in `gdi32.dll` on ARM64 build 29695.1001.
+* Adapter and device cleanup is best effort anyway: a missing export prints a
+  `[warn]` instead of turning a successful command into a crash.
 * `qcdx_edid --dump` creates `C:\data\test` for you; the driver only writes
   there and reports `status @+0xD8 = 4` if the directory is missing.
+
 
 
 

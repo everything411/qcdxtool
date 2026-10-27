@@ -23,10 +23,10 @@ static class QcdxEdid
     [DllImport("gdi32.dll")] static extern int D3DKMTOpenAdapterFromGdiDisplayName(IntPtr p);
     [DllImport("gdi32.dll")] static extern int D3DKMTCreateDevice(IntPtr p);
     [DllImport("gdi32.dll")] static extern int D3DKMTDestroyDevice(IntPtr p);
-    [DllImport("gdi32.dll")] static extern int D3DKMTCCloseAdapter(IntPtr p);
+    [DllImport("gdi32.dll")] static extern int D3DKMTCloseAdapter(IntPtr p);
     [DllImport("gdi32.dll")] static extern int D3DKMTEscape(IntPtr p);
 
-    // Windows removed gdi32!D3DKMTCCloseAdapter at some point (missing on build
+    // Windows removed gdi32!D3DKMTCloseAdapter at some point (missing on build
     // 29695.1001), and a P/Invoke to a missing export throws
     // EntryPointNotFoundException. Cleanup is best effort: the kernel releases
     // the handles when the process exits, so a missing export must not turn a
@@ -34,14 +34,14 @@ static class QcdxEdid
     static void TryDestroyDevice(IntPtr p)
     {
         try { D3DKMTDestroyDevice(p); }
-        catch (EntryPointNotFoundException) { }
+        catch (EntryPointNotFoundException) { Console.Error.WriteLine("[warn] gdi32!D3DKMTDestroyDevice not available; skipping cleanup"); }
         catch (DllNotFoundException) { }
     }
 
     static void TryCloseAdapter(IntPtr p)
     {
-        try { D3DKMTCCloseAdapter(p); }
-        catch (EntryPointNotFoundException) { }
+        try { D3DKMTCloseAdapter(p); }
+        catch (EntryPointNotFoundException) { Console.Error.WriteLine("[warn] gdi32!D3DKMTCloseAdapter not available; skipping cleanup"); }
         catch (DllNotFoundException) { }
     }
 
@@ -425,6 +425,8 @@ static class QcdxEdid
         }
     }
 }
+
+
 
 
 
